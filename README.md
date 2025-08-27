@@ -15,6 +15,7 @@ range of test test scenarios
 abstract actuator models
 * **MATLAB&reg; Apps** enables rapid test configuration
 
+View on File Exchange: [![View on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/181894-forklift-design-with-simscape)  
 You can also open in MATLAB Online: [![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=simscape/Forklift-Simscape&project=Forklift_Simscape.prj)
 
 ## Setup 
