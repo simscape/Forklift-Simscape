@@ -1,0 +1,294 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>Forklift Stability Model</title>
+<meta name="generator" content="MATLAB 24.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2025-08-08">
+<meta name="DC.source" content="sm_forklift.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h1>Forklift Stability Model</h1>
+<!--introduction-->
+<p>This example models a forklift with three-stage mast. You can use this model to perform stability analyses by sweeping design parameters and test conditions. The mechanical model of the lift was created in CAD software and imported into Simscape Multibody.</p>
+<div>
+<ul>
+<li>
+<b>CAD geometry</b> is imported to ensure accurate representation of masses, inertias, and joint locations.</li>
+<li>
+<b>Mechanical effects</b> are incorporated into the design, including ground contact and cables in the lift mast</li>
+<li>
+<b>Stability analyses</b> are performed by sweeping design parameters in a range of test test scenarios</li>
+<li>
+<b>Actuator requirements</b> are refined using dynamic simulation with abstract actuator models</li>
+<li>
+<b>MATLAB Apps</b> enables rapid test configuration</li>
+</ul>
+</div>
+<p>
+<img vspace="5" hspace="5" src="sm_forklift_overview_image.png" alt=""> </p>
+<!--/introduction-->
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">Model</a>
+</li>
+<li>
+<a href="#2">Forklift Model</a>
+</li>
+<li>
+<a href="#3">Mast Model</a>
+</li>
+<li>
+<a href="#4">Rear Model with Steering</a>
+</li>
+<li>
+<a href="#5">Front Model with Steering</a>
+</li>
+<li>
+<a href="#6">Simulation Results from Simscape Logging, Constant Radius Test</a>
+</li>
+<li>
+<a href="#8">Simulation Results from Simscape Logging, Step Steer</a>
+</li>
+<li>
+<a href="#10">Simulation Results from Simscape Logging, Step Steer Animation</a>
+</li>
+<li>
+<a href="#11">Simulation Results from Simscape Logging, Step Steer Sweep</a>
+</li>
+</ul>
+</div>
+<h2 id="1">Model</h2>
+<img vspace="5" hspace="5" src="sm_forklift_01.png" alt=""> <h2 id="2">Forklift Model</h2>
+<p>The chassis, front and rear axles, and mast are modeled in this subsystem.</p>
+<img vspace="5" hspace="5" src="sm_forklift_02.png" alt=""> <h2 id="3">Mast Model</h2>
+<p>This subsystem models the mast and carriage.</p>
+<img vspace="5" hspace="5" src="sm_forklift_03.png" alt=""> <h2 id="4">Rear Model with Steering</h2>
+<p>This subsystem models the rear axle with steering.</p>
+<img vspace="5" hspace="5" src="sm_forklift_04.png" alt=""> <h2 id="5">Front Model with Steering</h2>
+<p>This subsystem models the front axle with driven wheels.</p>
+<img vspace="5" hspace="5" src="sm_forklift_05.png" alt=""> <h2 id="6">Simulation Results from Simscape Logging, Constant Radius Test</h2>
+<p>The plot below shows the wheel speeds and forklift position during the maneuver.</p>
+<img vspace="5" hspace="5" src="sm_forklift_06.png" alt=""> <img vspace="5" hspace="5" src="sm_forklift_07.png" alt=""> <img vspace="5" hspace="5" src="sm_forklift_08.png" alt=""> <h2 id="8">Simulation Results from Simscape Logging, Step Steer</h2>
+<p>The plot below shows the wheel speeds and forklift position during the maneuver.</p>
+<img vspace="5" hspace="5" src="sm_forklift_09.png" alt=""> <img vspace="5" hspace="5" src="sm_forklift_10.png" alt=""> <img vspace="5" hspace="5" src="sm_forklift_11.png" alt=""> <h2 id="10">Simulation Results from Simscape Logging, Step Steer Animation</h2>
+<p>This animation shows how the forklift can tip under certain test conditions.</p>
+<p>
+<img vspace="5" hspace="5" src="Forklift_StepSteerFL_Compare_4_minEvent_2p5sec.gif" alt=""> </p>
+<h2 id="11">Simulation Results from Simscape Logging, Step Steer Sweep</h2>
+<p>The heatmap below shows the relative stability of the forklift under varying test conditions during a step steer.</p>
+<div>
+<ul>
+<li>The value in the heat map is the minimum wheel normal force at the end of the test. Each individual heat map <b>varies the amount of load and side shift position</b> of the forks.</li>
+<li>From left to right, each individual heat map shows the results with <b>increasing forward mast tilt</b>
+</li>
+<li>From bottom to top, each individual heamp shows the results with <b>increasing mast height</b>
+</li>
+</ul>
+</div>
+<p>The results show the worst case condition occurs at maximum forward tilt, maximum mast height.</p>
+<pre class="codeoutput">Starting parallel pool (parpool) using the 'Processes' profile ...
+Connected to parallel pool with 4 workers.
+</pre>
+<img vspace="5" hspace="5" src="sm_forklift_12.png" alt=""> <img vspace="5" hspace="5" src="sm_forklift_13.png" alt=""> <img vspace="5" hspace="5" src="sm_forklift_14.png" alt=""> <img vspace="5" hspace="5" src="sm_forklift_15.png" alt=""> <img vspace="5" hspace="5" src="sm_forklift_16.png" alt=""> <img vspace="5" hspace="5" src="sm_forklift_17.png" alt=""> <p class="footer">Copyright 2025 The MathWorks, Inc.<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% Forklift Stability Model
+% 
+% 
+% This example models a forklift with three-stage mast. You can use this model 
+% to perform stability analyses by sweeping design parameters and test conditions. 
+% The mechanical model of the lift was created in CAD software and imported 
+% into Simscape Multibody. 
+% 
+% * *CAD geometry* is imported to ensure accurate representation of masses, 
+% inertias, and joint locations.
+% * *Mechanical effects* are incorporated into the design, including ground 
+% contact and cables in the lift mast
+% * *Stability analyses* are performed by sweeping design parameters in a 
+% range of test test scenarios
+% * *Actuator requirements* are refined using dynamic simulation with 
+% abstract actuator models
+% * *MATLAB Apps* enables rapid test configuration
+% 
+% <<sm_forklift_overview_image.png>>
+%  
+% Copyright 2025 The MathWorks, Inc.
+
+%% Model
+
+open_system('sm_forklift')
+
+set_param(find_system('sm_forklift','MatchFilter',@Simulink.match.allVariants,'FindAll', 'on','type','annotation','Tag','ModelFeatures'),'Interpreter','off')
+
+%% Forklift Model
+%
+% The chassis, front and rear axles, and mast are modeled in this
+% subsystem.  
+
+set_param('sm_forklift/Forklift','LinkStatus','none')
+open_system('sm_forklift/Forklift','force')
+
+%% Mast Model
+%
+% This subsystem models the mast and carriage.
+
+set_param('sm_forklift/Forklift/Mast','LinkStatus','none')
+open_system('sm_forklift/Forklift/Mast','force')
+
+%% Rear Model with Steering
+%
+% This subsystem models the rear axle with steering.
+
+set_param('sm_forklift/Forklift/AxleR','LinkStatus','none')
+open_system('sm_forklift/Forklift/AxleR','force')
+
+%% Front Model with Steering
+%
+% This subsystem models the front axle with driven wheels.
+
+set_param('sm_forklift/Forklift/AxleF','LinkStatus','none')
+open_system('sm_forklift/Forklift/AxleF','force')
+
+
+
+%% Simulation Results from Simscape Logging, Constant Radius Test
+%%
+%
+% The plot below shows the wheel speeds and forklift position during the
+% maneuver.
+
+constRadF.vel = 3;
+sm_forklift_create_test(constRadF);
+out=sim('sm_forklift');
+sm_forklift_plot1whlspd(out.simlog_sm_forklift,ForkliftParams.groundContact.frontTireRad,ForkliftParams.groundContact.rearTireRad)
+sm_forklift_plot2bodypos(out.simlog_sm_forklift)
+sm_forklift_plot4whlfn(out.logsout_sm_forklift)
+
+%% Simulation Results from Simscape Logging, Step Steer
+%%
+% The plot below shows the wheel speeds and forklift position during the
+% maneuver.
+%
+
+stepSteerFL.vel = 3;
+sm_forklift_create_test(stepSteerFL);
+out=sim('sm_forklift');
+sm_forklift_plot1whlspd(out.simlog_sm_forklift,ForkliftParams.groundContact.frontTireRad,ForkliftParams.groundContact.rearTireRad)
+sm_forklift_plot2bodypos(out.simlog_sm_forklift)
+sm_forklift_plot4whlfn(out.logsout_sm_forklift)
+
+%% Simulation Results from Simscape Logging, Step Steer Animation
+%
+% This animation shows how the forklift can tip under certain test
+% conditions.
+%
+% <<Forklift_StepSteerFL_Compare_4_minEvent_2p5sec.gif>>
+% 
+
+%% Simulation Results from Simscape Logging, Step Steer Sweep
+%%
+% The heatmap below shows the relative stability of the forklift under
+% varying test conditions during a step steer. 
+% 
+% * The value in the heat map is the minimum wheel normal force at the end
+% of the test. Each individual heat map *varies the amount of load and side
+% shift position* of the forks.
+% * From left to right, each individual heat map shows the results with
+% *increasing forward mast tilt* 
+% * From bottom to top, each individual heamp shows the results with
+% *increasing mast height* 
+%
+% The results show the worst case condition occurs at maximum forward tilt,
+% maximum mast height.
+
+bdclose('sm_forklift')
+load_system('sm_forklift')
+stepSteerFLSweep.vel = 3;
+sm_forklift_run_sweep(stepSteerFLSweep,true);
+
+
+%%
+
+%clear all
+close all
+bdclose all
+
+##### SOURCE END #####
+-->
+</body>
+</html>
