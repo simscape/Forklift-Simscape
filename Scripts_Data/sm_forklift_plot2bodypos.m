@@ -4,7 +4,7 @@ function sm_forklift_plot2bodypos(simlogRes)
 %
 % The plot below shows the position of the vehicle during the maneuver.
 
-% Copyright 2021-2024 The MathWorks, Inc.
+% Copyright 2021-2025 The MathWorks, Inc.
 
 % Reuse figure if it exists, else create new figure
 figString = ['h1_' mfilename];
