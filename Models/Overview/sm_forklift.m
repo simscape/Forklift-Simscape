@@ -108,6 +108,10 @@ sm_forklift_plot4whlfn(out.logsout_sm_forklift)
 % maximum mast height.
 
 bdclose('sm_forklift')
+close(h1_sm_forklift_plot1whlspd)
+close(h1_sm_forklift_plot2bodypos)
+close(h1_sm_forklift_plot4whlfn)
+
 load_system('sm_forklift')
 stepSteerFLSweep.vel = 3;
 sm_forklift_run_sweep(stepSteerFLSweep,true);

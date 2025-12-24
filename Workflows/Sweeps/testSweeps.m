@@ -88,4 +88,7 @@ save([resultsFolder filesep fileRootName '_SweepRes'],'SweepResultsSMS','results
 clear SweepResultsSMS
 
 %% Create HTML to review images
-testSweeps_createHTML(now_string)
+
+% Create version to archive
+testSweeps_createHTML([now_string '_']);
+
