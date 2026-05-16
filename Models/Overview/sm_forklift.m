@@ -18,7 +18,7 @@
 % 
 % <<sm_forklift_overview_image.png>>
 %  
-% Copyright 2025 The MathWorks, Inc.
+% Copyright 2025-2026 The MathWorks, Inc.
 
 %% Model
 
